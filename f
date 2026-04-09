@@ -3307,7 +3307,7 @@
         SetTask("SubTask", "n/a")
         ParsingTimes = 0
         function RefreshTasksData()
-            if _G.Stop then
+            if _G.Stop or _G.CollectingBerry then
                 return
             end
             for _, TaskName in TasksOrder do
@@ -3400,6 +3400,7 @@
         
         task.spawn(function()
             while task.wait() do
+                while _G.CollectingBerry do task.wait(0.5) end
                 if not _G.Stop then
                      if SeaIndex == 1 and #game.Players:GetPlayers() > 9 then 
                         while task.wait() do 
@@ -3683,6 +3684,8 @@
 
         while task.wait() do
         
+            if _G.CollectingBerry then task.wait(0.5) continue end
+
             if Config.Configuration.HopWhenIdle and LastIdling and os.time() - LastIdling > 60 * 1.2 then
                 SetTask("MainTask", "Rejoinjng due idle in 10 min!")
                 task.wait(1)
