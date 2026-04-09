@@ -3607,8 +3607,8 @@
                     -- Usa sistema de voo existente
                     TweenController.Create(CFrame.new(closestPos + Vector3.new(0, 4, 0)))
 
-                    -- Aguarda chegar (timeout 20s)
-                    local travelTimeout = os.time() + 20
+                    -- Aguarda chegar (timeout 60s)
+                    local travelTimeout = os.time() + 60
                     while os.time() < travelTimeout do
                         task.wait(0.2)
                         local h = game.Players.LocalPlayer.Character
