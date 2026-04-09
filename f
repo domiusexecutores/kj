@@ -3519,9 +3519,9 @@
         end)
 
         -- =============================================
-        -- AUTO COLLECT BERRY SYSTEM v4
-        -- Fix: reseta flags no inicio, espera 4s na berry antes
-        --      de voltar pro farm, evitando vai-e-volta.
+        -- AUTO COLLECT BERRY SYSTEM v5
+        -- Teleporta direto em cima de cada berry object.
+        -- Continua coletando enquanto houver berries spawnadas.
         -- =============================================
         _G.CollectingBerry = nil
         _G.Stop = nil
@@ -3548,132 +3548,74 @@
                 return false
             end
 
+            local function bushHasBerry(Bush)
+                if not Bush or not Bush.Parent then return false end
+                for attrKey, attrVal in pairs(Bush:GetAttributes()) do
+                    if isBerryAllowed(attrVal) or isBerryAllowed(attrKey) then
+                        return true
+                    end
+                end
+                return false
+            end
+
+            local function anyBerriesExist()
+                for _, Bush in ipairs(CollectionService:GetTagged("BerryBush")) do
+                    if bushHasBerry(Bush) then return true end
+                end
+                return false
+            end
+
             while true do
                 task.wait(3)
 
                 if _G.CollectingBerry then continue end
 
-                local character = game.Players.LocalPlayer.Character
-                local hrp = character and character:FindFirstChild("HumanoidRootPart")
-                if not hrp then continue end
+                -- Só entra se realmente houver berry spawnada
+                if not anyBerriesExist() then continue end
 
-                -- 1) Achar a bush com berry permitida mais próxima
-                local BerryBushes = CollectionService:GetTagged("BerryBush")
-                local closestBush = nil
-                local closestPos  = nil
-                local closestName = nil
-                local closestDist = math.huge
-
-                for _, Bush in ipairs(BerryBushes) do
-                    if not Bush or not Bush.Parent then continue end
-
-                    local ok, bushPos = pcall(function()
-                        return Bush.Parent:GetPivot().Position
-                    end)
-                    if not ok or not bushPos then continue end
-
-                    local dist = (bushPos - hrp.Position).Magnitude
-
-                    local foundName = nil
-                    for attrKey, attrVal in pairs(Bush:GetAttributes()) do
-                        if isBerryAllowed(attrVal) then
-                            foundName = attrVal
-                            break
-                        elseif isBerryAllowed(attrKey) then
-                            foundName = attrKey
-                            break
-                        end
-                    end
-
-                    if foundName and dist < closestDist then
-                        closestDist = dist
-                        closestBush = Bush
-                        closestPos  = bushPos
-                        closestName = foundName
-                    end
-                end
-
-                if not closestBush then continue end
-
-                -- 2) Pausar farm e iniciar coleta
+                -- Pausa o farm
                 _G.CollectingBerry = true
                 _G.Stop = true
                 task.wait(0.3)
 
                 pcall(function()
-                    SetStatus("Collecting Berry: " .. closestName)
-                    SetTask("MainTask", "Berry Collector | " .. closestName)
-                    SetTask("SubTask", "Voando ate a bush...")
+                    SetStatus("Collecting Berries...")
+                    SetTask("MainTask", "Berry Collector")
 
-                    -- Usa sistema de voo existente
-                    TweenController.Create(CFrame.new(closestPos + Vector3.new(0, 4, 0)))
+                    -- Continua coletando ate nao sobrar nenhuma berry
+                    while anyBerriesExist() do
+                        for _, Bush in ipairs(CollectionService:GetTagged("BerryBush")) do
+                            if not bushHasBerry(Bush) then continue end
 
-                    -- Aguarda chegar (timeout 60s)
-                    local travelTimeout = os.time() + 60
-                    while os.time() < travelTimeout do
-                        task.wait(0.2)
-                        local h = game.Players.LocalPlayer.Character
-                            and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-                        if not h then break end
-                        if (closestPos - h.Position).Magnitude < 15 then break end
-                    end
+                            for _, BerryObj in ipairs(Bush:GetChildren()) do
+                                pcall(function()
+                                    local prompt = BerryObj:FindFirstChildOfClass("ProximityPrompt")
+                                        or BerryObj:FindFirstChild("ProximityPrompt")
+                                    if not prompt then return end
 
-                    -- Cancela o tween para parar de voar
-                    pcall(function()
-                        if TweenInstance then TweenInstance:Cancel() end
-                    end)
+                                    -- Teleporta EXATAMENTE em cima do objeto berry
+                                    local ok, pivot = pcall(function() return BerryObj.WorldPivot end)
+                                    if ok and pivot then
+                                        local hrp = game.Players.LocalPlayer.Character
+                                            and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+                                        if hrp then
+                                            hrp.CFrame = pivot
+                                        end
+                                    end
 
-                    -- Teleporta direto ao pivot da bush para garantir range
-                    local hrp2 = game.Players.LocalPlayer.Character
-                        and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-                    if hrp2 then
-                        hrp2.CFrame = CFrame.new(closestPos + Vector3.new(0, 3, 0))
-                    end
-
-                    task.wait(0.2)
-                    SetTask("SubTask", "Coletando berries...")
-
-                    -- 3) Dispara prompt em todos os filhos das bushes próximas
-                    local freshBushes = CollectionService:GetTagged("BerryBush")
-                    for _, Bush in ipairs(freshBushes) do
-                        if not Bush or not Bush.Parent then continue end
-
-                        local hasBerry = false
-                        for attrKey, attrVal in pairs(Bush:GetAttributes()) do
-                            if isBerryAllowed(attrVal) or isBerryAllowed(attrKey) then
-                                hasBerry = true
-                                break
+                                    task.wait(0.1)
+                                    SetTask("SubTask", "Coletando: " .. (BerryObj.Name or "Berry"))
+                                    fireproximityprompt(prompt, math.huge)
+                                    task.wait(0.3)
+                                end)
                             end
                         end
-                        if not hasBerry then continue end
 
-                        -- Filhos da bush = objetos berry com ProximityPrompt
-                        for _, BerryObj in ipairs(Bush:GetChildren()) do
-                            pcall(function()
-                                local prompt = BerryObj:FindFirstChildOfClass("ProximityPrompt")
-                                    or BerryObj:FindFirstChild("ProximityPrompt")
-                                if not prompt then return end
-
-                                -- Teleporta ao objeto berry
-                                local ok2, pivot = pcall(function() return BerryObj.WorldPivot end)
-                                if ok2 and pivot then
-                                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pivot
-                                end
-
-                                task.wait(0.1)
-                                fireproximityprompt(prompt, math.huge)
-                                task.wait(0.2)
-                            end)
-                        end
+                        task.wait(0.5)
                     end
-
-                    -- 4) Aguarda 4 segundos na posição antes de voltar ao farm
-                    --    Isso evita o vai-e-volta e garante que a berry sumiu
-                    SetTask("SubTask", "Aguardando berry sumir...")
-                    task.wait(4)
                 end)
 
-                -- 5) Cleanup garantido — farm retoma após isso
+                -- Cleanup — farm retoma apos isso
                 _G.CollectingBerry = nil
                 _G.Stop = nil
                 SetStatus("Farming...")
