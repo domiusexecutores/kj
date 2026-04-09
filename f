@@ -3724,29 +3724,3 @@ function SetTask(Index, Value)
     ScriptStorage.Task[Index] = Value  
     ScriptStorage.Task[Index .. "-d"] = os.time()
 end
-
-function love.draw()
-    love.graphics.clear(0.1, 0.1, 0.1)
-    love.graphics.setColor(1, 1, 1)
-
-    local y = 20
-    for key, value in pairs(ScriptStorage.Task) do
-        if not key:find("%-d$") then
-            local timestamp = ScriptStorage.Task[key .. "-d"]
-            local text = key .. ": " .. tostring(value) .. " (" .. os.date("%X", timestamp) .. ")"
-            love.graphics.print(text, 20, y)
-            y = y + 30
-        end
-    end
-end
-
-function love.update(dt)
-    if not lastUpdate then lastUpdate = 0 end
-    lastUpdate = lastUpdate + dt
-
-    if lastUpdate > 3 then
-        SetTask("MainTask", "Executando")
-        SetTask("SubTask", os.date("%X"))
-        lastUpdate = 0
-    end
-end
