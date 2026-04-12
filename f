@@ -4425,14 +4425,15 @@ Components.Window = (function()
 		Window.TabHolderTop = tabHolderTop
 
 		Window.TabHolder = New("ScrollingFrame", {
-			Size = UDim2.new(1, 0, 0.5, 0),
-			Position = UDim2.new(0, 0, 1, -67),
-			AnchorPoint = Vector2.new(0, 1),
+			Size = UDim2.new(1, 0, 1, -tabHolderTop),
+			Position = UDim2.new(0, 0, 0, tabHolderTop),
+			AnchorPoint = Vector2.new(0, 0),
 			BackgroundTransparency = 1,
 			ScrollBarImageTransparency = 1,
 			ScrollBarThickness = 0,
 			BorderSizePixel = 0,
 			CanvasSize = UDim2.fromScale(0, 0),
+			AutomaticCanvasSize = Enum.AutomaticSize.Y,
 			ScrollingDirection = Enum.ScrollingDirection.Y,
 		}, {
 			New("UIListLayout", {
@@ -9552,7 +9553,7 @@ Library.CreateWindow = function(self, Config)
 	Library.Theme = Config.Theme or "Dark"
 
 	if Config.BackgroundImage == nil then
-		Config.BackgroundImage = "rbxassetid://13196113628"
+		Config.BackgroundImage = "rbxassetid://86720583626882"
 	end
 
 	if Config.BackgroundTransparency == nil then
