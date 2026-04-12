@@ -4409,7 +4409,7 @@ Components.Window = (function()
 		local searchHeight = 28
 
 		local logoSize = 100
-		local logoSpacing = 30
+		local logoSpacing = 10
 
 		local tabHolderTop
 		if hasImage then
