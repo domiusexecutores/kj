@@ -4719,10 +4719,9 @@ Components.Window = (function()
 		local LastValue = 0
 		local LastTime = 0
 		Window.SelectorPosMotor:onStep(function(Value)
-			-- local base = Window.TabHolderTop or 45
-			local base = 132
+			local base = Window.TabHolderTop or 45
 			local verticalInset = 16
-			local selectorY = (_G.basee_ or base) + Value + verticalInset
+			local selectorY = base + Value + verticalInset
 
 			local searchOffset = Window.HasImage and (Window.ImageSize + Window.TopOffset + 10) or Window.TopOffset
 			local searchTop = searchOffset
@@ -4738,17 +4737,6 @@ Components.Window = (function()
 
 			if Window.ShowSearch then
 				if selectorY >= searchTop and selectorY <= searchBottom then
-					Selector.Visible = false
-					return
-				end
-			end
-
-			if Window.UserInfoHeight then
-				local tabFrameSize = Window.TabFrame and Window.TabFrame.Size.Y.Offset or 0
-				local userInfoTop = Window.UserInfoTop and 0 or Window.TabHolder.AbsolutePosition.Y
-				local userInfoBottom = Window.TabHolder.AbsolutePosition.Y + Window.TabHolder.AbsoluteSize.Y
-				
-				if selectorY >= userInfoTop and selectorY <= userInfoBottom then
 					Selector.Visible = false
 					return
 				end
