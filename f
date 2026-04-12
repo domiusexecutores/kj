@@ -4525,8 +4525,8 @@ Components.Window = (function()
 		local totalOffset = (Window.ShowSearch and searchHeight or 0) + imageOffset
 
 		local TabFrame = New("Frame", {
-			Size = UDim2.new(0, Window.TabWidth, 1, Window.ShowSearch and -63 or -31),
-			Position = UDim2.new(0, 12, 0, Window.ShowSearch and 54 or 19),
+			Size = UDim2.new(0, Window.TabWidth, 1, -63),
+			Position = UDim2.new(0, 12, 0, 54),
 			BackgroundTransparency = 1,
 			ClipsDescendants = true,
 		}, {
@@ -4536,7 +4536,7 @@ Components.Window = (function()
 			Selector,
 			New("ImageLabel", {
 				AnchorPoint = Vector2.new(0.5, 0),
-				Position = UDim2.new(0.5, 0, 0, 30),
+				Position = UDim2.new(0.5, 0, 0, 5),
 				Size = UDim2.new(0, 90, 0, 90),
 				BackgroundTransparency = 1,
 				ZIndex = 10,
