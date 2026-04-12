@@ -2076,7 +2076,7 @@ function AcrylicPaint()
 
 		AcrylicPaint.Frame = New("Frame", {
 			Size = UDim2.fromScale(1, 1),
-			BackgroundTransparency = 0.9,
+			BackgroundTransparency = 0.95,
 			BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 			BorderSizePixel = 0,
 		}, {
@@ -2097,7 +2097,7 @@ function AcrylicPaint()
 			}),
 
 			New("Frame", {
-				BackgroundTransparency = 0.45,
+				BackgroundTransparency = 0.7,
 				Size = UDim2.fromScale(1, 1),
 				Name = "Background",
 				ThemeTag = {
@@ -2111,7 +2111,7 @@ function AcrylicPaint()
 
 			New("Frame", {
 				BackgroundColor3 = Color3.fromRGB(255, 255, 255),
-				BackgroundTransparency = 0.4,
+				BackgroundTransparency = 0.7,
 				Size = UDim2.fromScale(1, 1),
 			}, {
 				New("UICorner", {
