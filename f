@@ -4675,7 +4675,6 @@ Components.Window = (function()
 		Window.TitleBar = Components.TitleBar({
 			Title = Config.Title,
 			SubTitle = Config.SubTitle,
-			Icon = Config.Icon,
 			Parent = Window.Root,
 			Window = Window,
 		})
