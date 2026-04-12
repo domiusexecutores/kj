@@ -4408,6 +4408,9 @@ Components.Window = (function()
 		local searchOffset = hasImage and (imageSize + 10 + topOffset) or topOffset
 		local searchHeight = 28
 
+		local logoSize = 100
+		local logoSpacing = 10
+
 		local tabHolderTop
 		if hasImage then
 			if Window.ShowSearch then
@@ -4416,11 +4419,7 @@ Components.Window = (function()
 				tabHolderTop = imageSize + 10 + topOffset
 			end
 		else
-			if Window.ShowSearch then
-				tabHolderTop = topOffset + searchHeight + 6
-			else
-				tabHolderTop = 45
-			end
+			tabHolderTop = logoSize + logoSpacing + topOffset
 		end
 		Window.TabHolderTop = tabHolderTop
 
@@ -4534,8 +4533,8 @@ Components.Window = (function()
 			Window.TabHolder,
 			Selector,
 			New("ImageLabel", {
-				AnchorPoint = Vector2.new(0.5, 0.5),
-				Position = UDim2.new(0.5, 0, 0.2, 0),
+				AnchorPoint = Vector2.new(0.5, 0),
+				Position = UDim2.new(0.5, 0, 0, 0),
 				Size = UDim2.new(0, 100, 0, 100),
 				BackgroundTransparency = 1,
 			Image = _G.modbynoguchihyuga or "rbxassetid://86720583626882"
