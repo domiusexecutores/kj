@@ -4538,7 +4538,7 @@ Components.Window = (function()
 				Position = UDim2.new(0.5, 0, 0.2, 0),
 				Size = UDim2.new(0, 100, 0, 100),
 				BackgroundTransparency = 1,
-				Image = _G.modbynoguchihyuga or "rbxassetid://79670828268085"
+			Image = _G.modbynoguchihyuga or "rbxassetid://86720583626882"
 			})
 		})
 
@@ -9553,7 +9553,7 @@ Library.CreateWindow = function(self, Config)
 	Library.Theme = Config.Theme or "Dark"
 
 	if Config.BackgroundImage == nil then
-		Config.BackgroundImage = "rbxassetid://86720583626882"
+		Config.BackgroundImage = "rbxassetid://13196113628"
 	end
 
 	if Config.BackgroundTransparency == nil then
