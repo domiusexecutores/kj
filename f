@@ -4139,7 +4139,7 @@ Components.Window = (function()
 		local Selector = New("Frame", {
 			Size = UDim2.fromOffset(4, 0),
 			BackgroundColor3 = Color3.fromRGB(76, 194, 255),
-			Position = UDim2.fromOffset(0, (Window.TabHolderTop or 45) + 0),
+			Position = UDim2.fromOffset(0, 0),
 			AnchorPoint = Vector2.new(0, 0.5),
 			ZIndex = 1,
 			ThemeTag = {
@@ -4423,6 +4423,8 @@ Components.Window = (function()
 		end
 		Window.TabHolderTop = tabHolderTop
 
+		Selector.Position = UDim2.fromOffset(0, tabHolderTop)
+
 		Window.TabHolder = New("ScrollingFrame", {
 			Size = UDim2.new(1, 0, 1, -tabHolderTop),
 			Position = UDim2.new(0, 0, 0, tabHolderTop),
@@ -4534,10 +4536,15 @@ Components.Window = (function()
 			Selector,
 			New("ImageLabel", {
 				AnchorPoint = Vector2.new(0.5, 0),
-				Position = UDim2.new(0.5, 0, 0, 0),
-				Size = UDim2.new(0, 100, 0, 100),
+				Position = UDim2.new(0.5, 0, 0, 5),
+				Size = UDim2.new(0, 90, 0, 90),
 				BackgroundTransparency = 1,
-			Image = _G.modbynoguchihyuga or "rbxassetid://86720583626882"
+				ZIndex = 10,
+				Image = _G.modbynoguchihyuga or "rbxassetid://86720583626882",
+			}, {
+				New("UICorner", {
+					CornerRadius = UDim.new(0, 6),
+				}),
 			})
 		})
 
