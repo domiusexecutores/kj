@@ -4409,7 +4409,7 @@ Components.Window = (function()
 		local searchHeight = 28
 
 		local logoSize = 100
-		local logoSpacing = 10
+		local logoSpacing = 30
 
 		local tabHolderTop
 		if hasImage then
@@ -4536,7 +4536,7 @@ Components.Window = (function()
 			Selector,
 			New("ImageLabel", {
 				AnchorPoint = Vector2.new(0.5, 0),
-				Position = UDim2.new(0.5, 0, 0, 5),
+				Position = UDim2.new(0.5, 0, 0, 30),
 				Size = UDim2.new(0, 90, 0, 90),
 				BackgroundTransparency = 1,
 				ZIndex = 10,
