@@ -2111,7 +2111,7 @@ function AcrylicPaint()
 
 			New("Frame", {
 				BackgroundColor3 = Color3.fromRGB(255, 255, 255),
-				BackgroundTransparency = 0.25,
+				BackgroundTransparency = 0.17,
 				Size = UDim2.fromScale(1, 1),
 			}, {
 				New("UICorner", {
