@@ -5757,16 +5757,6 @@ ElementsTable.Dropdown = (function()
 			end
 		end)
 
-		Creator.AddSignal(DropdownInner.InputBegan, function(Input)
-			if Input.UserInputType == Enum.UserInputType.Touch then
-				if Dropdown.Opened then
-					Dropdown:Close()
-				else
-					Dropdown:Open()
-				end
-			end
-		end)
-
 		Creator.AddSignal(DropdownDisplay:GetPropertyChangedSignal("Text"), function()
 			for _, Element in next, DropdownScrollFrame:GetChildren() do
 				if not Element:IsA("UIListLayout") then
@@ -5783,7 +5773,7 @@ ElementsTable.Dropdown = (function()
 				or Input.UserInputType == Enum.UserInputType.Touch
 			then
 				local currentTime = tick()
-				if currentTime - Dropdown.LastClickTime < 0.2 then
+				if currentTime - Dropdown.LastClickTime < 0.5 then
 					return
 				end
 				
