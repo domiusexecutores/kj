@@ -5286,7 +5286,7 @@ ElementsTable.Dropdown = (function()
 			Multi = Config.Multi,
 			Buttons = {},
 			Opened = false,
-			IgnoreNextClick = false,
+			LastClickTime = 0,
 			Type = "Dropdown",
 			Callback = Config.Callback or function() end,
 			Search = (Config.Search == nil) and true or Config.Search,
@@ -5782,8 +5782,8 @@ ElementsTable.Dropdown = (function()
 				Input.UserInputType == Enum.UserInputType.MouseButton1
 				or Input.UserInputType == Enum.UserInputType.Touch
 			then
-				if Dropdown.IgnoreNextClick then
-					Dropdown.IgnoreNextClick = false
+				local currentTime = tick()
+				if currentTime - Dropdown.LastClickTime < 0.2 then
 					return
 				end
 				
@@ -5806,7 +5806,7 @@ ElementsTable.Dropdown = (function()
 				return
 			end
 			Dropdown.Opened = true
-			Dropdown.IgnoreNextClick = true
+			Dropdown.LastClickTime = tick()
 			if Dropdown.OpenToRight then
 				Dropdown.SavedY = nil
 			end
