@@ -5336,6 +5336,7 @@ ElementsTable.Dropdown = (function()
 			Position = UDim2.new(1, -8, 0.5, 0),
 			BackgroundTransparency = 1,
 			Rotation = initialRotation,
+			Visible = false,
 			ThemeTag = {
 				ImageColor3 = "SubText",
 			},
