@@ -5286,6 +5286,7 @@ ElementsTable.Dropdown = (function()
 			Multi = Config.Multi,
 			Buttons = {},
 			Opened = false,
+			IgnoreNextClick = false,
 			Type = "Dropdown",
 			Callback = Config.Callback or function() end,
 			Search = (Config.Search == nil) and true or Config.Search,
@@ -5336,7 +5337,6 @@ ElementsTable.Dropdown = (function()
 			Position = UDim2.new(1, -8, 0.5, 0),
 			BackgroundTransparency = 1,
 			Rotation = initialRotation,
-			Visible = false,
 			ThemeTag = {
 				ImageColor3 = "SubText",
 			},
@@ -5782,6 +5782,11 @@ ElementsTable.Dropdown = (function()
 				Input.UserInputType == Enum.UserInputType.MouseButton1
 				or Input.UserInputType == Enum.UserInputType.Touch
 			then
+				if Dropdown.IgnoreNextClick then
+					Dropdown.IgnoreNextClick = false
+					return
+				end
+				
 				local mousePos = Input.UserInputType == Enum.UserInputType.MouseButton1 and Vector2.new(Mouse.X, Mouse.Y) or Input.Position
 				local AbsPos, AbsSize = DropdownHolderFrame.AbsolutePosition, DropdownHolderFrame.AbsoluteSize
 				local innerAbsPos, innerAbsSize = DropdownInner.AbsolutePosition, DropdownInner.AbsoluteSize
@@ -5801,6 +5806,7 @@ ElementsTable.Dropdown = (function()
 				return
 			end
 			Dropdown.Opened = true
+			Dropdown.IgnoreNextClick = true
 			if Dropdown.OpenToRight then
 				Dropdown.SavedY = nil
 			end
