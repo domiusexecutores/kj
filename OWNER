@@ -1,0 +1,95 @@
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+local Workspace = game:GetService("Workspace")
+
+local player = Players.LocalPlayer
+_G.Seriality = true
+
+local function IsEntityAlive(entity)
+    if not entity then return false end
+    local humanoid = entity:FindFirstChild("Humanoid")
+    return humanoid and humanoid.Health > 0
+end
+
+local function GetEnemiesInRange(character, range)
+    local targets = {}
+    if not character then return targets end
+    
+    local root = character:FindFirstChild("HumanoidRootPart")
+    if not root then return targets end
+    
+    local playerPos = root.Position
+    
+    for _, enemy in ipairs(Workspace.Enemies:GetChildren()) do
+        local enemyRoot = enemy:FindFirstChild("HumanoidRootPart")
+        if enemyRoot and IsEntityAlive(enemy) then
+            if (enemyRoot.Position - playerPos).Magnitude <= range then
+                table.insert(targets, enemy)
+            end
+        end
+    end
+    
+    return targets
+end
+
+local function AttackNoCoolDown()
+    local character = player.Character
+    if not character then return end
+    
+    local equippedWeapon = character:FindFirstChildOfClass("Tool")
+    if not equippedWeapon then return end
+    
+    local enemies = GetEnemiesInRange(character, 100)
+    if #enemies == 0 then return end
+    
+    local modules = ReplicatedStorage:FindFirstChild("Modules")
+    if not modules then return end
+    
+    local net = modules:FindFirstChild("Net")
+    if not net then return end
+    
+    local registerAttack = net:FindFirstChild("RE/RegisterAttack")
+    local registerHit = net:FindFirstChild("RE/RegisterHit")
+    
+    if not registerAttack or not registerHit then return end
+    
+    local targets = {}
+    local mainTarget = nil
+    
+    for _, enemy in ipairs(enemies) do
+        if not enemy:GetAttribute("IsBoat") then
+            local part = enemy:FindFirstChild("Head") or enemy.PrimaryPart
+            if part then
+                table.insert(targets, {enemy, part})
+                mainTarget = part
+            end
+        end
+    end
+    
+    if not mainTarget then return end
+    
+    registerAttack:FireServer(0)
+    registerHit:FireServer(mainTarget, targets)
+end
+
+task.spawn(function()
+    RunService.Heartbeat:Connect(function()
+        if not _G.Seriality then return end
+        
+        pcall(function()
+            local character = player.Character
+            if not character then return end
+            
+            local tool = character:FindFirstChildOfClass("Tool")
+            if not tool then return end
+            
+            if tool:FindFirstChild("LeftClickRemote") then
+                AttackNoCoolDown()
+                
+                tool.LeftClickRemote:FireServer(Vector3.new(0.01,-500,0.01),1,true)
+                tool.LeftClickRemote:FireServer(false)
+            end
+        end)
+    end)
+end)
